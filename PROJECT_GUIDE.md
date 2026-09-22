@@ -28,7 +28,7 @@ CAL FIRE incident feed -> Python build -> dist/ static site -> GitHub Pages
 | Data source | CAL FIRE public incident API | Official source for the incident records shown. |
 | Build | Python | Produces a low-cost portable site from a versioned snapshot. |
 | Hosting | GitHub Pages | Hosts the finished static files without a backend. |
-| Optional enrichment | OpenAI Responses API | Adds concise context only when a key is intentionally configured. |
+| Optional local enrichment | OpenAI Responses API | Available for local exploration, but intentionally excluded from the public CI deployment. |
 
 ## Running it
 

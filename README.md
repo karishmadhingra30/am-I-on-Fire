@@ -31,7 +31,7 @@ Open http://localhost:8000.
 
 Push to `main` or run the GitHub Actions workflow manually. The workflow builds `dist/`, commits updated `cache/summaries.json` back to the repo, and deploys the built files to the `gh-pages` branch. There is no scheduled cron rebuild; the deployed page attempts to refresh volatile fields in the viewer's browser.
 
-`OPENAI_API_KEY` is optional—not a requirement for public deployment. Adding it enriches newly changed incidents; it does not change the source of record, which remains CAL FIRE. If enrichment is unavailable (including an exhausted quota), the build transparently uses a deterministic summary from the official feed instead of failing the deployment.
+`OPENAI_API_KEY` is optional for local exploration; the public GitHub Pages workflow deliberately does not use it. This keeps the deployment fast, reviewable, and independent of an AI-provider account. The source of record remains CAL FIRE, and published summaries are deterministic descriptions of the official feed.
 
 GitHub Pages should be configured to serve the `gh-pages` branch.
 

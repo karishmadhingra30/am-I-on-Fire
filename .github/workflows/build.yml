@@ -31,7 +31,6 @@ jobs:
 
       - name: Build site
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_REPOSITORY_URL: https://github.com/${{ github.repository }}
         run: python build/build.py
 
