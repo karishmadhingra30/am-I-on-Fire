@@ -6,7 +6,7 @@ A public, static wildfire dashboard that turns official CAL FIRE incident record
 
 The build downloads active and current-year California wildfire records, filters to wildfires, and generates static HTML and JSON. Visitors can inspect the published snapshot and open each official incident page; the site is explicitly not an emergency-alert source.
 
-AI enrichment is optional. Without an API key, every new incident receives a deterministic summary based only on CAL FIRE feed fields, keeping the public deployment reliable and credential-free.
+AI enrichment is optional. Without an API key—or if its request fails—every new incident receives a deterministic summary based only on CAL FIRE feed fields, keeping the public deployment reliable and credential-free.
 
 ## Architecture
 

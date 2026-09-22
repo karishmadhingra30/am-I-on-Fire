@@ -46,7 +46,10 @@ def summarize_incident(incident: Incident, detail_text: str, cache: dict[str, di
         return _deterministic_summary(incident)
 
     model = os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
-    summary = _call_openai(incident, detail_text, model)
+    try:
+        summary = _call_openai(incident, detail_text, model)
+    except SummaryError:
+        return _deterministic_summary(incident)
     summary = _normalize_summary(summary)
 
     cache[incident.cache_key] = {
