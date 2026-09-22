@@ -8,10 +8,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "build"))
 
+from fetch import _normalize_record  # noqa: E402
+from summarize import _deterministic_summary  # noqa: E402
+from test_fetch import BASE_RECORD  # noqa: E402
 from build import _render_cards  # noqa: E402
 
 
 class BuildRenderTest(unittest.TestCase):
+    def test_fallback_summary_uses_incident_feed_when_no_ai_key_is_available(self) -> None:
+        incident = _normalize_record(dict(BASE_RECORD), 0, "test")
+        self.assertEqual(
+            _deterministic_summary(incident),
+            "The Test Fire is reported near Test location at 123.4 acres. "
+            "The latest official feed lists containment at 56%.",
+        )
+
     def test_active_card_contains_refresh_hooks_and_summary(self) -> None:
         html = _render_cards(
             [

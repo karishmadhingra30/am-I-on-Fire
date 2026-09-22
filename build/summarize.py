@@ -43,10 +43,7 @@ def summarize_incident(incident: Incident, detail_text: str, cache: dict[str, di
 
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        raise SummaryError(
-            "OPENAI_API_KEY is required to generate a new summary. "
-            f"Missing cache entry for {incident.name} ({incident.cache_key})."
-        )
+        return _deterministic_summary(incident)
 
     model = os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
     summary = _call_openai(incident, detail_text, model)
@@ -59,6 +56,18 @@ def summarize_incident(incident: Incident, detail_text: str, cache: dict[str, di
         "incident_name": incident.name,
     }
     return summary
+
+
+def _deterministic_summary(incident: Incident) -> str:
+    """Return a useful, source-derived fallback when AI enrichment is unavailable."""
+    location = incident.location or incident.county or "California"
+    acres = _format_acres_for_prompt(incident.acres)
+    containment = _format_percent_for_prompt(incident.containment)
+    incident_label = incident.name if incident.name.lower().endswith("fire") else f"{incident.name} Fire"
+    first = f"The {incident_label} is reported near {location} at {acres} acres."
+    if incident.containment is not None:
+        return f"{first} The latest official feed lists containment at {containment}."
+    return f"{first} Check the official incident page for the latest status."
 
 
 def _call_openai(incident: Incident, detail_text: str, model: str) -> str:
@@ -131,4 +140,3 @@ def _format_percent_for_prompt(percent: float | None) -> str:
     if percent is None:
         return "Unknown"
     return f"{percent:g}%"
-

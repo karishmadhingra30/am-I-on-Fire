@@ -16,7 +16,7 @@ Build the site:
 python build/build.py
 ```
 
-For local development, put `OPENAI_API_KEY=...` in `.env` or export it in your shell. GitHub Actions reads the key from repository secrets instead.
+`OPENAI_API_KEY` is optional. When it is configured, the build creates a short, source-grounded AI summary for new incidents. Without it, the deployed site still builds and displays a deterministic two-sentence summary from CAL FIRE's incident feed.
 
 Preview the generated files:
 
@@ -31,11 +31,7 @@ Open http://localhost:8000.
 
 Push to `main` or run the GitHub Actions workflow manually. The workflow builds `dist/`, commits updated `cache/summaries.json` back to the repo, and deploys the built files to the `gh-pages` branch. There is no scheduled cron rebuild; the deployed page attempts to refresh volatile fields in the viewer's browser.
 
-Required repository secret:
-
-```text
-OPENAI_API_KEY
-```
+`OPENAI_API_KEY` is optional—not a requirement for public deployment. Adding it enriches newly changed incidents; it does not change the source of record, which remains CAL FIRE.
 
 GitHub Pages should be configured to serve the `gh-pages` branch.
 
@@ -49,7 +45,7 @@ The build reads CAL FIRE incident data from:
 
 The list API currently exposes operational fields such as incident ID, name, update time, county, location, acres, containment, coordinates, incident type, active state, and official URL. Richer narrative context lives on the official detail pages, so the build fetches those pages for active wildfires before asking OpenAI for a two-sentence summary.
 
-Summaries are cached in `cache/summaries.json` by `incident_id + last_updated_timestamp`. If an incident has not changed, the build reuses the cached summary and does not call OpenAI again.
+Summaries are cached in `cache/summaries.json` by `incident_id + last_updated_timestamp`. If an incident has not changed, the build reuses the cached summary and does not call OpenAI again. With no key, new incidents receive a deterministic feed-derived fallback so the site remains deployable without secrets.
 
 The default model is `gpt-4.1-mini`, configurable with `OPENAI_MODEL`.
 
